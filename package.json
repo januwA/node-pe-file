@@ -1,0 +1,40 @@
+{
+  "name": "node-pe-file",
+  "version": "0.1.0",
+  "description": "nodejs解析PE文件",
+  "private": true,
+  "main": "./src/index.ts",
+  "module": "./src/index.ts",
+  "types": "",
+  "scripts": {
+    "build": "webpack --config __config__/webpack/prod.config.js",
+    "watch": "webpack --config __config__/webpack/dev.config.js --watch",
+    "test": "jest"
+  },
+  "keywords": [
+    "pe",
+    "nodejs pe",
+    "Ajanuw"
+  ],
+  "author": "Ajanuw",
+  "license": "MIT",
+  "homepage": "https://github.com/januwA/node-pe-file",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/januwA/node-pe-file.git"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.10",
+    "clean-webpack-plugin": "^3.0.0",
+    "jest": "^26.4.0",
+    "terser-webpack-plugin": "^4.1.0",
+    "ts-jest": "^26.2.0",
+    "ts-loader": "^8.0.2",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7",
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12",
+    "webpack-copy-file-plugin": "^0.1.5"
+  },
+  "dependencies": {}
+}

@@ -1,0 +1,25 @@
+{
+	"compilerOptions": {
+		"outDir": "./dist/",
+		"module": "ES2020",
+		"target": "ES2020",
+		"incremental": true,
+		"strict": true,
+		"emitDecoratorMetadata": true,
+		"experimentalDecorators": true,
+		"forceConsistentCasingInFileNames": true,
+		"declaration": true,
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"baseUrl": "./",
+		"typeRoots": [
+			"node_modules/@types"
+		],
+		"paths": {}
+	},
+	"exclude": [
+		"node_modules",
+		"dist",
+		"test/**/*.test.ts"
+	]
+}
