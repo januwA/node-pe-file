@@ -159,7 +159,7 @@ export class IMAGE_EXPORT_DIRECTORY_PARSE {
   /**
    * 提供便于阅读的属性
    *
-   * ! PE头中并没有此属性
+   * ! 注：PE头中并没有此属性
    */
   exports: {
     foa_address_dec: number;

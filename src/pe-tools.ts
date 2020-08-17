@@ -32,8 +32,8 @@ export function RVA2FOA(pe: PE_FILE, rva: number, isVA: boolean = false) {
   // 2. 判断在那个(内存)节内
   const section = pe.image_section_headers.find((it) => {
     return (
-      r > buffer2dec(it.VirtualAddress) &&
-      r < buffer2dec(it.VirtualAddress) + buffer2dec(it.SizeOfRawData)
+      r >= buffer2dec(it.VirtualAddress) &&
+      r <= buffer2dec(it.VirtualAddress) + buffer2dec(it.SizeOfRawData)
     );
   });
 
@@ -349,6 +349,6 @@ export function readASCII(data: Buffer, offset: number): Buffer {
     nameBytes.push(byte);
     offset++;
   }
-  
+
   return Buffer.from(nameBytes);
 }

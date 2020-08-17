@@ -9,7 +9,10 @@ import {
   getFileHeaderCharacteristicsFlags,
   IMAGE_EXPORT_DIRECTORY,
   IMAGE_EXPORT_DIRECTORY_PARSE,
+  IMAGE_DIRECTORY_ENTRY_BASERELOC_PARSE,
+  CREATE_IMAGE_DIRECTORY_ENTRY_BASERELOC,
 } from "../src";
+import { arrayLast } from "../src/tools";
 
 const l = console.log;
 
@@ -17,25 +20,24 @@ describe("main", () => {
   // it("test exe", (done) => {
   //   fs.readFile("C:\\Users\\ajanuw\\Desktop\\game2.exe", (er, data) => {
   //     const pe = new PE_FILE(data);
-  //     console.log(
-  //       pe.image_nt_headers.image_optional_header.DataDirectory[
-  //         IMAGE_DIRECTORY_ENTRY_IMPORT
-  //       ],
-  //     );
-
+  //     const deb = CREATE_IMAGE_DIRECTORY_ENTRY_BASERELOC(pe, data);
   //     done();
   //   });
   // });
 
   it("test dll", (done) => {
-    const p = "D:\\games\\csgo\\csgolauncher.exe";
-    // const p = "C:\\Windows\\System32\\opengl32.dll";
-    fs.readFile(p, (er, data) => {
+    fs.readFile("C:\\Windows\\System32\\opengl32.dll", (er, data) => {
       const pe = new PE_FILE(data);
-      const ed = CREATE_IMAGE_EXPORT_DIRECTORY(pe, data);
-      const edp =  new IMAGE_EXPORT_DIRECTORY_PARSE(pe, ed, data);
-      console.log(edp);
-      
+      //const ed = CREATE_IMAGE_EXPORT_DIRECTORY(pe, data);
+      //const edp =  new IMAGE_EXPORT_DIRECTORY_PARSE(pe, ed, data);
+      //console.log(edp);
+
+      const deb = CREATE_IMAGE_DIRECTORY_ENTRY_BASERELOC(pe, data);
+      console.log(arrayLast(deb));
+
+      console.log(
+        new IMAGE_DIRECTORY_ENTRY_BASERELOC_PARSE(pe, arrayLast(deb), data)
+      );
 
       done();
     });
