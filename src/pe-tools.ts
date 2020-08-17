@@ -312,3 +312,11 @@ export function align(size: number, alignSize: number): number {
   if (size < alignSize) return alignSize;
   return Math.ceil(size / alignSize) * alignSize;
 }
+
+/**
+ * 通过SizeOfOptionalHeader检查PE文件是否为 x64
+ * @param pe
+ */
+export function isX64PE(SizeOfOptionalHeader: number) {
+  return SizeOfOptionalHeader === 0xf0;
+}

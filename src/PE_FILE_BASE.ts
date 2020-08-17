@@ -7,7 +7,7 @@ export abstract class PE_FILE_BASE {
     this.#data = data;
   }
 
-  _readByte(size: number) {
+  protected _readByte(size: number) {
     const r = readByte(this.#data, this.offset, size);
     this.offset += size;
     return r;

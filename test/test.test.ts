@@ -1,16 +1,34 @@
 import * as fs from "fs";
-import { PE_FILE, align, IMAGE_DIRECTORY_ENTRY_IMPORT } from "../src";
+import {
+  PE_FILE,
+  align,
+  IMAGE_DIRECTORY_ENTRY_IMPORT,
+  IMAGE_DIRECTORY_ENTRY_EXPORT,
+  buffer2hex,
+  RVA2FOA,
+  buffer2dec
+} from "../src";
 
 describe("main", () => {
-  it("test pe", (done) => {
-    fs.readFile("C:\\Users\\ajanuw\\Desktop\\game2.exe", (er, data) => {
-      const pe = new PE_FILE(data);
-      console.log(
-        pe.image_nt_headers.image_optional_header.DataDirectory[
-          IMAGE_DIRECTORY_ENTRY_IMPORT
-        ],
-      );
+  // it("test exe", (done) => {
+  //   fs.readFile("C:\\Users\\ajanuw\\Desktop\\game2.exe", (er, data) => {
+  //     const pe = new PE_FILE(data);
+  //     console.log(
+  //       pe.image_nt_headers.image_optional_header.DataDirectory[
+  //         IMAGE_DIRECTORY_ENTRY_IMPORT
+  //       ],
+  //     );
 
+  //     done();
+  //   });
+  // });
+
+  it("test dll", (done) => {
+    fs.readFile("C:\\Windows\\System32\\opengl32.dll", (er, data) => {
+      const pe = new PE_FILE(data);
+
+      console.log(pe.image_nt_headers.image_optional_header);
+      
       done();
     });
   });

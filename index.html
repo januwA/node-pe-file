@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <input type="file" name="" id="file" />
+    <script src="./buffer.js"></script>
+    <script src="./dist/node-pe-file.js"></script>
+    <script>
+      const l = console.log;
+
+      document.querySelector("#file").addEventListener("change", (e) => {
+        var reader = new FileReader();
+        reader.readAsArrayBuffer(e.target.files[0]);
+        reader.onload = (e) => {
+          const data = new Buffer.from(e.target.result);
+          const pe = new PE_FILE(data);
+          console.log(pe);
+        };
+      });
+    </script>
+  </body>
+</html>

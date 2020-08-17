@@ -15,6 +15,10 @@ export function buffer2dec(data: Buffer) {
   return parseInt(copyBuffer(data).reverse().toString("hex"), 16);
 }
 
+export function buffer2hex(data: Buffer) {
+  return copyBuffer(data).reverse().toString("hex").toUpperCase();
+}
+
 export function arrayLast(arr: any[], lastOffset = 1) {
   return arr[arr.length - lastOffset];
 }

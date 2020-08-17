@@ -28,6 +28,7 @@ export class PE_FILE {
   image_section_headers: IMAGE_SECTION_HEADER[] = [];
 
   constructor(data: Buffer) {
+
     // 获取dos头
     this.image_dos_header = new IMAGE_DOS_HEADER(data, this.offset);
     //assert(this.image_dos_header.offset - DWORD == 0x3c);

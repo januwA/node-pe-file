@@ -14,6 +14,7 @@ export {
   BYTE,
   WORD,
   DWORD,
+  QWORD,
   IMAGE_SIZEOF_SHORT_NAME,
   IMAGE_DIRECTORY_ENTRY_EXPORT,
   IMAGE_DIRECTORY_ENTRY_IMPORT,
@@ -33,7 +34,7 @@ export {
   IMAGE_DIRECTORY_ENTRY_NULL,
 } from "./types";
 
-export { readByte, memcpy, copyBuffer, buffer2dec } from "./tools";
+export { readByte, memcpy, copyBuffer, buffer2dec, buffer2hex } from "./tools";
 
 export {
   RVA2FOA,
@@ -43,4 +44,5 @@ export {
   getPeFilesize,
   pushSection,
   align,
+  isX64PE
 } from "./pe-tools";

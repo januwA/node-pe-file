@@ -1,6 +1,7 @@
 export const BYTE = 1;
 export const WORD = 2;
 export const DWORD = 4;
+export const QWORD = 8;
 export const IMAGE_SIZEOF_SHORT_NAME = 8;
 
 /**

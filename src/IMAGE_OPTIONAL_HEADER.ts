@@ -1,7 +1,7 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { WORD, DWORD, BYTE } from "./types";
-import { buffer2dec } from "./tools";
+import { WORD, DWORD, BYTE, QWORD } from "./types";
 import { IMAGE_DATA_DIRECTORY } from "./IMAGE_DATA_DIRECTORY";
+import { isX64PE } from "./pe-tools";
 
 /**
 struct _IMAGE_OPTIONAL_HEADER {
@@ -14,7 +14,7 @@ struct _IMAGE_OPTIONAL_HEADER {
   0x10 DWORD AddressOfEntryPoint;
   0x14 DWORD BaseOfCode;
   0x18 DWORD BaseOfData;
-  0x1c DWORD ImageBase;
+  0x1c DWORD/QWORD ImageBase;
   0x20 DWORD SectionAlignment;
   0x24 DWORD FileAlignment;
   0x28 WORD MajorOperatingSystemVersion;
@@ -29,10 +29,10 @@ struct _IMAGE_OPTIONAL_HEADER {
   0x40 DWORD CheckSum;
   0x44 WORD Subsystem;
   0x46 WORD DllCharacteristics;
-  0x48 DWORD SizeOfStackReserve;
-  0x4c DWORD SizeOfStackCommit;
-  0x50 DWORD SizeOfHeapReserve;
-  0x54 DWORD SizeOfHeapCommit;
+  0x48 DWORD/QWORD SizeOfStackReserve;
+  0x4c DWORD/QWORD SizeOfStackCommit;
+  0x50 DWORD/QWORD SizeOfHeapReserve;
+  0x54 DWORD/QWORD SizeOfHeapCommit;
   0x58 DWORD LoaderFlags;
   0x5c DWORD NumberOfRvaAndSizes;
   0x60 _IMAGE_DATA_DIRECTORY DataDirectory[16];
@@ -44,7 +44,6 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
    *
    * ! 你始终因该使用[image_file_header.SizeOfOptionalHeader]来获取IMAGE_OPTIONAL_HEADER的大小
    *
-   * ? 添加这个size属性的目的是为了统一，值为0
    */
   static size = 0;
 
@@ -73,7 +72,11 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
    */
   AddressOfEntryPoint: Buffer;
   BaseOfCode: Buffer;
-  BaseOfData: Buffer;
+
+  /**
+   * PE32包含此附加字段，在BaseOfCode之后，PE32 +中不存在。
+   */
+  BaseOfData?: Buffer;
 
   /**
    * 图像的第一个字节的首选地址，当加载到内存时； 必须是64K的倍数。
@@ -140,16 +143,21 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
 
   constructor(data: Buffer, offset: number) {
     super(data, offset);
+
+    const bX64 = isX64PE(IMAGE_OPTIONAL_HEADER.size);
+
     this.Magic = this._readByte(WORD);
     this.MajorLinkerVersion = this._readByte(BYTE);
     this.MinorLinkerVersion = this._readByte(BYTE);
     this.SizeOfCode = this._readByte(DWORD);
+
     this.SizeOfInitializedData = this._readByte(DWORD);
     this.SizeOfUninitializedData = this._readByte(DWORD);
+
     this.AddressOfEntryPoint = this._readByte(DWORD);
     this.BaseOfCode = this._readByte(DWORD);
-    this.BaseOfData = this._readByte(DWORD);
-    this.ImageBase = this._readByte(DWORD);
+    if (!bX64) this.BaseOfData = this._readByte(DWORD);
+    this.ImageBase = this._readByte(bX64 ? QWORD : DWORD);
     this.SectionAlignment = this._readByte(DWORD);
     this.FileAlignment = this._readByte(DWORD);
     this.MajorOperatingSystemVersion = this._readByte(WORD);
@@ -163,19 +171,19 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
     this.SizeOfHeaders = this._readByte(DWORD);
     this.CheckSum = this._readByte(DWORD);
     this.Subsystem = this._readByte(WORD);
-    this.DllCharacteristics = this._readByte(WORD);
-    this.SizeOfStackReserve = this._readByte(DWORD);
-    this.SizeOfStackCommit = this._readByte(DWORD);
-    this.SizeOfHeapReserve = this._readByte(DWORD);
-    this.SizeOfHeapCommit = this._readByte(DWORD);
-    this.LoaderFlags = this._readByte(DWORD);
-    this.NumberOfRvaAndSizes = this._readByte(DWORD);
 
+    this.DllCharacteristics = this._readByte(WORD);
+    this.SizeOfStackReserve = this._readByte(bX64 ? QWORD : DWORD);
+    this.SizeOfStackCommit = this._readByte(bX64 ? QWORD : DWORD);
+    this.SizeOfHeapReserve = this._readByte(bX64 ? QWORD : DWORD);
+    this.SizeOfHeapCommit = this._readByte(bX64 ? QWORD : DWORD);
+    this.LoaderFlags = this._readByte(DWORD);
+
+    this.NumberOfRvaAndSizes = this._readByte(DWORD);
     for (let i = 0; i < 16; i++) {
       const image_data_directory = new IMAGE_DATA_DIRECTORY(data, this.offset);
       this.DataDirectory.push(image_data_directory);
       this.offset = image_data_directory.offset;
     }
-
   }
 }

@@ -1,5 +1,7 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
 import { WORD, DWORD } from "./types";
+import { IMAGE_OPTIONAL_HEADER } from "./index";
+import { buffer2dec } from "./tools";
 
 /**
 struct _IMAGE_FILE_HEADER {
@@ -67,6 +69,7 @@ export class IMAGE_FILE_HEADER extends PE_FILE_BASE {
     this.NumberOfSymbols = this._readByte(DWORD);
     this.SizeOfOptionalHeader = this._readByte(WORD);
     this.Characteristics = this._readByte(WORD);
+
+    IMAGE_OPTIONAL_HEADER.size = buffer2dec(this.SizeOfOptionalHeader);
   }
 }
-
