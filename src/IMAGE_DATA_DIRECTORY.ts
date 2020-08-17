@@ -1,5 +1,5 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { DWORD } from "./types";
+import { DWORD_t } from "./types";
 
 /**
 struct _IMAGE_DATA_DIRECTORY {
@@ -10,11 +10,14 @@ struct _IMAGE_DATA_DIRECTORY {
 export class IMAGE_DATA_DIRECTORY extends PE_FILE_BASE {
   static size = 0x8;
   
+  /**
+   * ! VirtualAddress存的是VA地址,不是RVA地址
+   */
   VirtualAddress: Buffer;
   Size: Buffer;
   constructor(data: Buffer, offset: number) {
     super(data, offset);
-    this.VirtualAddress = this._readByte(DWORD);
-    this.Size = this._readByte(DWORD);
+    this.VirtualAddress = this._readByte(DWORD_t);
+    this.Size = this._readByte(DWORD_t);
   }
 }

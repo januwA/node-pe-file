@@ -1,5 +1,5 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { WORD, DWORD, BYTE, QWORD } from "./types";
+import { WORD_t, DWORD_t, BYTE_t, QWORD_t } from "./types";
 import { IMAGE_DATA_DIRECTORY } from "./IMAGE_DATA_DIRECTORY";
 import { isX64PE } from "./pe-tools";
 
@@ -146,40 +146,40 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
 
     const bX64 = isX64PE(IMAGE_OPTIONAL_HEADER.size);
 
-    this.Magic = this._readByte(WORD);
-    this.MajorLinkerVersion = this._readByte(BYTE);
-    this.MinorLinkerVersion = this._readByte(BYTE);
-    this.SizeOfCode = this._readByte(DWORD);
+    this.Magic = this._readByte(WORD_t);
+    this.MajorLinkerVersion = this._readByte(BYTE_t);
+    this.MinorLinkerVersion = this._readByte(BYTE_t);
+    this.SizeOfCode = this._readByte(DWORD_t);
 
-    this.SizeOfInitializedData = this._readByte(DWORD);
-    this.SizeOfUninitializedData = this._readByte(DWORD);
+    this.SizeOfInitializedData = this._readByte(DWORD_t);
+    this.SizeOfUninitializedData = this._readByte(DWORD_t);
 
-    this.AddressOfEntryPoint = this._readByte(DWORD);
-    this.BaseOfCode = this._readByte(DWORD);
-    if (!bX64) this.BaseOfData = this._readByte(DWORD);
-    this.ImageBase = this._readByte(bX64 ? QWORD : DWORD);
-    this.SectionAlignment = this._readByte(DWORD);
-    this.FileAlignment = this._readByte(DWORD);
-    this.MajorOperatingSystemVersion = this._readByte(WORD);
-    this.MinorOperatingSystemVersion = this._readByte(WORD);
-    this.MajorImageVersion = this._readByte(WORD);
-    this.MinorImageVersion = this._readByte(WORD);
-    this.MajorSubsystemVersion = this._readByte(WORD);
-    this.MinorSubsystemVersion = this._readByte(WORD);
-    this.Win32VersionValue = this._readByte(DWORD);
-    this.SizeOfImage = this._readByte(DWORD);
-    this.SizeOfHeaders = this._readByte(DWORD);
-    this.CheckSum = this._readByte(DWORD);
-    this.Subsystem = this._readByte(WORD);
+    this.AddressOfEntryPoint = this._readByte(DWORD_t);
+    this.BaseOfCode = this._readByte(DWORD_t);
+    if (!bX64) this.BaseOfData = this._readByte(DWORD_t);
+    this.ImageBase = this._readByte(bX64 ? QWORD_t : DWORD_t);
+    this.SectionAlignment = this._readByte(DWORD_t);
+    this.FileAlignment = this._readByte(DWORD_t);
+    this.MajorOperatingSystemVersion = this._readByte(WORD_t);
+    this.MinorOperatingSystemVersion = this._readByte(WORD_t);
+    this.MajorImageVersion = this._readByte(WORD_t);
+    this.MinorImageVersion = this._readByte(WORD_t);
+    this.MajorSubsystemVersion = this._readByte(WORD_t);
+    this.MinorSubsystemVersion = this._readByte(WORD_t);
+    this.Win32VersionValue = this._readByte(DWORD_t);
+    this.SizeOfImage = this._readByte(DWORD_t);
+    this.SizeOfHeaders = this._readByte(DWORD_t);
+    this.CheckSum = this._readByte(DWORD_t);
+    this.Subsystem = this._readByte(WORD_t);
 
-    this.DllCharacteristics = this._readByte(WORD);
-    this.SizeOfStackReserve = this._readByte(bX64 ? QWORD : DWORD);
-    this.SizeOfStackCommit = this._readByte(bX64 ? QWORD : DWORD);
-    this.SizeOfHeapReserve = this._readByte(bX64 ? QWORD : DWORD);
-    this.SizeOfHeapCommit = this._readByte(bX64 ? QWORD : DWORD);
-    this.LoaderFlags = this._readByte(DWORD);
+    this.DllCharacteristics = this._readByte(WORD_t);
+    this.SizeOfStackReserve = this._readByte(bX64 ? QWORD_t : DWORD_t);
+    this.SizeOfStackCommit = this._readByte(bX64 ? QWORD_t : DWORD_t);
+    this.SizeOfHeapReserve = this._readByte(bX64 ? QWORD_t : DWORD_t);
+    this.SizeOfHeapCommit = this._readByte(bX64 ? QWORD_t : DWORD_t);
+    this.LoaderFlags = this._readByte(DWORD_t);
 
-    this.NumberOfRvaAndSizes = this._readByte(DWORD);
+    this.NumberOfRvaAndSizes = this._readByte(DWORD_t);
     for (let i = 0; i < 16; i++) {
       const image_data_directory = new IMAGE_DATA_DIRECTORY(data, this.offset);
       this.DataDirectory.push(image_data_directory);

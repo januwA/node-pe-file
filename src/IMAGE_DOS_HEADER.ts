@@ -1,5 +1,5 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { WORD, DWORD } from "./types";
+import { WORD_t, DWORD_t } from "./types";
 
 /**
 struct _IMAGE_DOS_HEADER {
@@ -56,40 +56,40 @@ export class IMAGE_DOS_HEADER extends PE_FILE_BASE {
 
   constructor(data: Buffer, offset: number) {
     super(data, offset);
-    this.e_magic = this._readByte(WORD);
-    this.e_cblp = this._readByte(WORD);
-    this.e_cp = this._readByte(WORD);
-    this.e_crlc = this._readByte(WORD);
-    this.e_cparhdr = this._readByte(WORD);
-    this.e_minalloc = this._readByte(WORD);
-    this.e_maxalloc = this._readByte(WORD);
-    this.e_ss = this._readByte(WORD);
-    this.e_sp = this._readByte(WORD);
-    this.e_csum = this._readByte(WORD);
-    this.e_ip = this._readByte(WORD);
-    this.e_cs = this._readByte(WORD);
-    this.e_lfarlc = this._readByte(WORD);
-    this.e_ovno = this._readByte(WORD);
+    this.e_magic = this._readByte(WORD_t);
+    this.e_cblp = this._readByte(WORD_t);
+    this.e_cp = this._readByte(WORD_t);
+    this.e_crlc = this._readByte(WORD_t);
+    this.e_cparhdr = this._readByte(WORD_t);
+    this.e_minalloc = this._readByte(WORD_t);
+    this.e_maxalloc = this._readByte(WORD_t);
+    this.e_ss = this._readByte(WORD_t);
+    this.e_sp = this._readByte(WORD_t);
+    this.e_csum = this._readByte(WORD_t);
+    this.e_ip = this._readByte(WORD_t);
+    this.e_cs = this._readByte(WORD_t);
+    this.e_lfarlc = this._readByte(WORD_t);
+    this.e_ovno = this._readByte(WORD_t);
     this.e_res = [
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
     ];
-    this.e_oemid = this._readByte(WORD);
-    this.e_oeminfo = this._readByte(WORD);
+    this.e_oemid = this._readByte(WORD_t);
+    this.e_oeminfo = this._readByte(WORD_t);
     this.e_res2 = [
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
-      this._readByte(WORD),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
+      this._readByte(WORD_t),
     ];
-    this.e_lfanew = this._readByte(DWORD);
+    this.e_lfanew = this._readByte(DWORD_t);
   }
 }

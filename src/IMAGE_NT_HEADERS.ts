@@ -1,7 +1,7 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
 import { IMAGE_FILE_HEADER } from "./IMAGE_FILE_HEADER";
 import { IMAGE_OPTIONAL_HEADER } from "./IMAGE_OPTIONAL_HEADER";
-import { DWORD } from "./types";
+import { DWORD_t } from "./types";
 
 /**
 struct _IMAGE_NT_HEADERS {
@@ -29,7 +29,7 @@ export class IMAGE_NT_HEADERS extends PE_FILE_BASE {
   constructor(data: Buffer, offset: number) {
     super(data, offset);
 
-    this.Signature = this._readByte(DWORD);
+    this.Signature = this._readByte(DWORD_t);
 
     this.image_file_header = new IMAGE_FILE_HEADER(data, this.offset);
     this.offset = this.image_file_header.offset;

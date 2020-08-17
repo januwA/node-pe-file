@@ -1,11 +1,14 @@
 import { PE_FILE } from "./node-pe-file";
 import { buffer2dec, memcpy, arrayLast } from "./tools";
-import { Section_Flags } from "./flags";
+import { Section_Flags, Characteristics_Flags } from "./flags";
 import { IMAGE_SECTION_HEADER } from "./IMAGE_SECTION_HEADER";
-import { IMAGE_SIZEOF_SHORT_NAME, DWORD, WORD } from "./types";
+import { IMAGE_SIZEOF_SHORT_NAME_t, DWORD_t, WORD_t } from "./types";
 
 /**
  * 将RAM的虚拟地址转化为文件偏移地址
+ * 
+ * * RVA（相对虚拟地址）
+ * * VA（虚拟地址）
  * 
  * ```
   const pe_file = new PE_FILE(data);
@@ -15,12 +18,11 @@ import { IMAGE_SIZEOF_SHORT_NAME, DWORD, WORD } from "./types";
   const foa2 = RVA2FOA(pe_file, 0x00400001);
   console.log(foa2.toString(16));
  * ```
- * 
- * @param pe
- * @param rva
  */
-export function RVA2FOA(pe: PE_FILE, rva: number) {
-  let r = rva - buffer2dec(pe.image_nt_headers.image_optional_header.ImageBase);
+export function RVA2FOA(pe: PE_FILE, rva: number, isVA: boolean = false) {
+  let r = isVA
+    ? rva
+    : rva - buffer2dec(pe.image_nt_headers.image_optional_header.ImageBase);
 
   // 1. 如果在dos头，nt头，节表内
   if (r < buffer2dec(pe.image_nt_headers.image_optional_header.SizeOfHeaders)) {
@@ -102,6 +104,18 @@ export function mem2buffer(pe: PE_FILE, newmem: Buffer) {
 export function getSectionFlags(Characteristics: number) {
   return Object.keys(Section_Flags).reduce<string[]>((acc, key, i) => {
     const v: number = Characteristics & Section_Flags[key];
+    if (v !== 0) acc.push(key);
+    return acc;
+  }, []);
+}
+
+/**
+ * 获取文件属性标志
+ * @param Characteristics
+ */
+export function getFileHeaderCharacteristicsFlags(Characteristics: number) {
+  return Object.keys(Characteristics_Flags).reduce<string[]>((acc, key, i) => {
+    const v: number = Characteristics & Characteristics_Flags[key];
     if (v !== 0) acc.push(key);
     return acc;
   }, []);
@@ -237,57 +251,57 @@ export function pushSection(
   );
 
   // 使用固定长度存name，避免溢出
-  const namebuf = Buffer.alloc(IMAGE_SIZEOF_SHORT_NAME);
+  const namebuf = Buffer.alloc(IMAGE_SIZEOF_SHORT_NAME_t);
   namebuf.write(sectionOpt.Name, "ascii");
 
   let offset = 0;
 
   // IMAGE_SECTION_HEADER Name
   const newSectionBuffer = Buffer.alloc(IMAGE_SECTION_HEADER.size);
-  namebuf.copy(newSectionBuffer, 0, 0, IMAGE_SIZEOF_SHORT_NAME);
-  offset += IMAGE_SIZEOF_SHORT_NAME;
+  namebuf.copy(newSectionBuffer, 0, 0, IMAGE_SIZEOF_SHORT_NAME_t);
+  offset += IMAGE_SIZEOF_SHORT_NAME_t;
 
   // DWORD Misc
   newSectionBuffer.writeInt32LE(SizeOfHeaders, offset);
-  offset += DWORD;
+  offset += DWORD_t;
 
   // DWORD VirtualAddress
   const VirtualAddress =
     buffer2dec(lastSection.VirtualAddress) +
     buffer2dec(lastSection.SizeOfRawData);
   newSectionBuffer.writeUInt32LE(VirtualAddress, offset);
-  offset += DWORD;
+  offset += DWORD_t;
 
   // DWORD SizeOfRawData;
   newSectionBuffer.writeInt32LE(SizeOfHeaders, offset);
-  offset += DWORD;
+  offset += DWORD_t;
 
   // DWORD PointerToRawData
   const PointerToRawData =
     buffer2dec(lastSection.PointerToRawData) +
     buffer2dec(lastSection.SizeOfRawData);
   newSectionBuffer.writeUInt32LE(PointerToRawData, offset);
-  offset += DWORD;
+  offset += DWORD_t;
 
   // DWORD PointerToRelocations;
   newSectionBuffer.writeUInt32LE(0, offset);
-  offset += DWORD;
+  offset += DWORD_t;
 
   // DWORD PointerToLinenumbers;
   newSectionBuffer.writeUInt32LE(0, offset);
-  offset += DWORD;
+  offset += DWORD_t;
 
   // WORD NumberOfRelocations;
   newSectionBuffer.writeUInt16LE(0, offset);
-  offset += WORD;
+  offset += WORD_t;
 
   // WORD NumberOfLinenumbers;
   newSectionBuffer.writeUInt16LE(0, offset);
-  offset += WORD;
+  offset += WORD_t;
 
   // DWORD Characteristics;
   newSectionBuffer.writeUInt32LE(sectionOpt.Characteristics, offset);
-  offset += WORD;
+  offset += WORD_t;
 
   // 将新的节考到data中去
   newSectionBuffer.copy(
@@ -319,4 +333,22 @@ export function align(size: number, alignSize: number): number {
  */
 export function isX64PE(SizeOfOptionalHeader: number) {
   return SizeOfOptionalHeader === 0xf0;
+}
+
+/**
+ * 读ascii字符串，返回buffer
+ * @param data
+ * @param offset
+ */
+export function readASCII(data: Buffer, offset: number): Buffer {
+  const nameBytes = [];
+
+  while (true) {
+    const byte = data.readInt8(offset);
+    if (byte === 0) break;
+    nameBytes.push(byte);
+    offset++;
+  }
+  
+  return Buffer.from(nameBytes);
 }

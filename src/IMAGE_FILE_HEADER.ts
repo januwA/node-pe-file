@@ -1,5 +1,5 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { WORD, DWORD } from "./types";
+import { WORD_t, DWORD_t } from "./types";
 import { IMAGE_OPTIONAL_HEADER } from "./index";
 import { buffer2dec } from "./tools";
 
@@ -51,9 +51,7 @@ export class IMAGE_FILE_HEADER extends PE_FILE_BASE {
   SizeOfOptionalHeader: Buffer;
 
   /**
-   * 指示文件属性的标志。 有关特定标志值，请参见特性。
-   *
-   * 每一位代表不同信息
+   * 文件属性的标志。 有关特定标志值，请参见特性。
    *
    * https://docs.microsoft.com/en-us/windows/win32/debug/pe-format#characteristics
    */
@@ -62,13 +60,13 @@ export class IMAGE_FILE_HEADER extends PE_FILE_BASE {
   constructor(data: Buffer, offset: number) {
     super(data, offset);
 
-    this.Machine = this._readByte(WORD);
-    this.NumberOfSections = this._readByte(WORD);
-    this.TimeDateStamp = this._readByte(DWORD);
-    this.PointerToSymbolTable = this._readByte(DWORD);
-    this.NumberOfSymbols = this._readByte(DWORD);
-    this.SizeOfOptionalHeader = this._readByte(WORD);
-    this.Characteristics = this._readByte(WORD);
+    this.Machine = this._readByte(WORD_t);
+    this.NumberOfSections = this._readByte(WORD_t);
+    this.TimeDateStamp = this._readByte(DWORD_t);
+    this.PointerToSymbolTable = this._readByte(DWORD_t);
+    this.NumberOfSymbols = this._readByte(DWORD_t);
+    this.SizeOfOptionalHeader = this._readByte(WORD_t);
+    this.Characteristics = this._readByte(WORD_t);
 
     IMAGE_OPTIONAL_HEADER.size = buffer2dec(this.SizeOfOptionalHeader);
   }

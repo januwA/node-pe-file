@@ -1,5 +1,5 @@
 import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { IMAGE_SIZEOF_SHORT_NAME, DWORD, WORD } from "./types";
+import { IMAGE_SIZEOF_SHORT_NAME_t, DWORD_t, WORD_t } from "./types";
 
 /**
 typedef struct _IMAGE_SECTION_HEADER {
@@ -96,17 +96,17 @@ export class IMAGE_SECTION_HEADER extends PE_FILE_BASE {
 
   constructor(data: Buffer, offset: number) {
     super(data, offset);
-    this.Name = this._readByte(IMAGE_SIZEOF_SHORT_NAME);
-    const Misc = this._readByte(DWORD);
+    this.Name = this._readByte(IMAGE_SIZEOF_SHORT_NAME_t);
+    const Misc = this._readByte(DWORD_t);
     this.Misc = new IMAGE_SECTION_HEADER_MISC(Misc);
-    this.VirtualAddress = this._readByte(DWORD);
-    this.SizeOfRawData = this._readByte(DWORD);
-    this.PointerToRawData = this._readByte(DWORD);
-    this.PointerToRelocations = this._readByte(DWORD);
-    this.PointerToLinenumbers = this._readByte(DWORD);
-    this.NumberOfRelocations = this._readByte(WORD);
-    this.NumberOfLinenumbers = this._readByte(WORD);
-    this.Characteristics = this._readByte(DWORD);
+    this.VirtualAddress = this._readByte(DWORD_t);
+    this.SizeOfRawData = this._readByte(DWORD_t);
+    this.PointerToRawData = this._readByte(DWORD_t);
+    this.PointerToRelocations = this._readByte(DWORD_t);
+    this.PointerToLinenumbers = this._readByte(DWORD_t);
+    this.NumberOfRelocations = this._readByte(WORD_t);
+    this.NumberOfLinenumbers = this._readByte(WORD_t);
+    this.Characteristics = this._readByte(DWORD_t);
   }
 }
 
