@@ -1,12 +1,22 @@
-// const fs = require("fs");
-// const { PE_FILE } = require("./dist/node-pe-file");
+const fs = require("fs");
+const {
+  PE_FILE,
+  IMAGE_DIRECTORY_ENTRY_IMPORT_PARSE,
+  CREATE_IMAGE_DIRECTORY_ENTRY_IMPORT,
+} = require("./dist/node-pe-file");
 
-// fs.readFile("C:\\Users\\ajanuw\\Desktop\\game2.exe", (er, data) => {
-//   const pe = new PE_FILE(data);
-//   console.log(pe);
-// });
+const gamePath = "C:\\Users\\ajanuw\\Desktop\\game2.exe";
+const opengl32_dllPath = "C:\\Windows\\System32\\opengl32.dll";
 
-let b = Buffer.alloc(4);
+fs.readFile(gamePath, (er, data) => {
+  const pe = new PE_FILE(data);
 
-b.writeUInt32LE(0x0a, 0);
-
+  const imp = CREATE_IMAGE_DIRECTORY_ENTRY_IMPORT(pe, data);
+  imp.forEach((it) => {
+    const p = new IMAGE_DIRECTORY_ENTRY_IMPORT_PARSE(pe, it, data);
+    console.log(p.Name.toString());
+    p.FirstThunk.forEach((it) => {
+      console.log("  " + it.name?.Name?.toString());
+    });
+  });
+});

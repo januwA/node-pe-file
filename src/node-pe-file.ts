@@ -4,7 +4,7 @@
 import { IMAGE_DOS_HEADER } from "./images/IMAGE_DOS_HEADER";
 import { IMAGE_NT_HEADERS } from "./images/IMAGE_NT_HEADERS";
 import { IMAGE_SECTION_HEADER } from "./images/IMAGE_SECTION_HEADER";
-import { buffer2dec } from "./tools";
+import { buffer2dec, buffer2hex } from "./tools";
 
 /**
  * const pe = new PE_FILE(data);
@@ -44,6 +44,7 @@ export class PE_FILE {
     let image_section_header_offset =
       this.image_nt_headers.image_file_header.offset +
       buffer2dec(this.image_nt_headers.image_file_header.SizeOfOptionalHeader);
+
 
     // 获取共有几个节表
     const image_section_header_length = buffer2dec(

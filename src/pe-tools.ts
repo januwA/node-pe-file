@@ -27,11 +27,11 @@ export function RVA2FOA(
   rva: number | Buffer,
   isVA: boolean = false
 ) {
-  if (rva instanceof Buffer) {
+  if (typeof rva !== "number") {
     rva = buffer2dec(rva);
   }
 
-  let r = !isVA
+  const r = !isVA
     ? rva
     : rva - buffer2dec(pe.image_nt_headers.image_optional_header.ImageBase);
 
@@ -242,7 +242,7 @@ export function pushSection(
 
   if (size < IMAGE_SECTION_HEADER.size * 2) {
     // 如果小于80字节，就不能加
-    return 0;
+    return;
   }
 
   // 2. 修改PE文件中节的数量

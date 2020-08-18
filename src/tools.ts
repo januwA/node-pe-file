@@ -45,16 +45,20 @@ export function toBit(num: number | string, bX64: boolean = false) {
 /**
  * 索引从0开始
  */
-export function getBitIndex(bit: string | number | Buffer, index: number) {
+export function getBitIndex(
+  bit: string | number | Buffer,
+  index: number
+): string {
   if (bit instanceof Buffer) {
     bit = buffer2dec(bit);
   }
+  
   if (typeof bit === "number") {
     bit = bit.toString(2);
   }
 
   // 溢出返回 0
-  return bit[bit.length - 1 - index] ?? 0;
+  return bit[bit.length - 1 - index] || "0";
 }
 
 /**

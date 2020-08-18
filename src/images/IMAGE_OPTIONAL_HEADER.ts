@@ -48,7 +48,13 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
   static size = 0;
 
   /**
-   * 标识图像文件状态的无符号整数。 最常见的数字是0x10B，将其标识为普通的可执行文件。 0x107将其标识为ROM映像，而0x20B将其标识为PE32+ 可执行文件。
+   * 标识图像文件状态的无符号整数。 
+   * 
+   * 最常见的数字是0x10B，将其标识为普通的可执行文件。 
+   * 
+   * 0x107将其标识为ROM映像，
+   * 
+   * 而0x20B将其标识为PE32+ 可执行文件。
    */
   Magic: Buffer;
   MajorLinkerVersion: Buffer;
@@ -102,6 +108,7 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
    * 文件对齐（以字节为单位），用于对齐图像文件中各节的原始数据。 该值应为512到64 K（含）之间的2的幂。 默认值为512。如果SectionAlignment小于体系结构的页面大小，则FileAlignment必须匹配SectionAlignment。
    */
   FileAlignment: Buffer;
+
   MajorOperatingSystemVersion: Buffer;
   MinorOperatingSystemVersion: Buffer;
   MajorImageVersion: Buffer;
@@ -114,12 +121,16 @@ export class IMAGE_OPTIONAL_HEADER extends PE_FILE_BASE {
    * 当图像加载到内存中时，图像的大小（以字节为单位）,
    * 包括所有标头。 它必须是SectionAlignment的倍数。
    *
-   * 通常这个大小是：dos头大小 + 标准头大小 + 可选头大小 + 对齐的节表大小的总和
+   * 通常这个大小是：dos头 + NT头 + 节表 + 所有对齐的节表 大小的总和
+   * 
+   * 也就是这个可执行文件被加载到内存中后的总大小
    */
   SizeOfImage: Buffer;
 
   /**
-   * dos头，PE标头和节标头的组合大小四舍五入为FileAlignment的倍数。
+   * dos头，NT头和节表的组合大小四舍五入为 *FileAlignment* 的倍数。
+   * 
+   * 通常在这之后就是第一个节的起始位置
    */
   SizeOfHeaders: Buffer;
 

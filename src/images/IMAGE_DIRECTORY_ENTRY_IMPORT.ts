@@ -12,7 +12,6 @@ import {
   getBitIndex,
   toBit,
   getBitRange,
-  buffer2hex,
 } from "../tools";
 import { RVA2FOA, readASCII, isX64PE } from "../pe-tools";
 
@@ -81,6 +80,8 @@ export class IMAGE_DIRECTORY_ENTRY_IMPORT extends PE_FILE_BASE {
 
   /**
    * 在绑定图像之前将其设置为零的标记。 绑定图像后，此字段设置为DLL的时间/数据标记。
+   * 
+   * 再修改IAT表前，这个值位0，绑定后时间存在IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT.TimeDateStamp
    */
   TimeDateStamp: Buffer;
 
@@ -135,7 +136,7 @@ export class IMAGE_DIRECTORY_ENTRY_IMPORT_U {
   Characteristics: Buffer;
 
   /**
-   * 指向IMT表 import name table
+   * 指向IMT表 RVA import name table
    */
   OriginalFirstThunk: Buffer;
   constructor(data: Buffer) {

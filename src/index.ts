@@ -25,6 +25,11 @@ export {
   IMAGE_DIRECTORY_ENTRY_IMPORT_PARSE,
 } from "./images/IMAGE_DIRECTORY_ENTRY_IMPORT";
 
+export {
+  CREATE_IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT,
+  IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT,
+} from "./images/IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT";
+
 export { Section_Flags } from "./flags";
 
 export {

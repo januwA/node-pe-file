@@ -23,8 +23,13 @@ module.exports = {
   rules: [
     {
       test: /\.tsx?$/,
-      exclude: /(node_modules|bower_components)/,
-      use: ["ts-loader"],
+      exclude: /node_modules/,
+      use: [
+        {
+          loader: "ts-loader",
+          options: {},
+        },
+      ],
     },
   ],
 

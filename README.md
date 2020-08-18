@@ -46,9 +46,11 @@ fs.readFile("C:\\Windows\\System32\\opengl32.dll", (er, data) => {
     });
   });
 
-  done();
 });
 ```
 
 - [高清PDF](http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf)
 - [microsoft 文档](https://docs.microsoft.com/en-us/windows/win32/debug/pe-format)
+
+
+![](./images/2020-08-18-21-06-38.png)
