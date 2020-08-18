@@ -1,23 +1,23 @@
-import { PE_FILE } from "./node-pe-file";
+import { PE_FILE } from "../node-pe-file";
 import {
   IMAGE_DIRECTORY_ENTRY_BASERELOC_INDEX,
   DWORD_t,
   WORD_t,
-} from "./types";
-import { RVA2FOA } from "./pe-tools";
-import { buffer2dec, buffer2hex } from "./tools";
-import { PE_FILE_BASE } from "./PE_FILE_BASE";
+} from "../types";
+import { RVA2FOA } from "../pe-tools";
+import { buffer2dec, buffer2hex } from "../tools";
+import { PE_FILE_BASE } from "../PE_FILE_BASE";
 
 export function CREATE_IMAGE_DIRECTORY_ENTRY_BASERELOC(
   pe: PE_FILE,
   data: Buffer
 ) {
-  const directData =
+  const directTable =
     pe.image_nt_headers.image_optional_header.DataDirectory[
       IMAGE_DIRECTORY_ENTRY_BASERELOC_INDEX
     ];
 
-  let offset = RVA2FOA(pe, buffer2dec(directData.VirtualAddress), true);
+  let offset = RVA2FOA(pe, directTable.VirtualAddress);
   if (offset === 0) return [];
 
   const r: IMAGE_DIRECTORY_ENTRY_BASERELOC[] = [];

@@ -1,7 +1,7 @@
-import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { WORD_t, DWORD_t } from "./types";
-import { IMAGE_OPTIONAL_HEADER } from "./index";
-import { buffer2dec } from "./tools";
+import { PE_FILE_BASE } from "../PE_FILE_BASE";
+import { WORD_t, DWORD_t } from "../types";
+import { IMAGE_OPTIONAL_HEADER } from "../index";
+import { buffer2dec } from "../tools";
 
 /**
 struct _IMAGE_FILE_HEADER {

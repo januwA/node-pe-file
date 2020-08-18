@@ -22,3 +22,53 @@ export function buffer2hex(data: Buffer) {
 export function arrayLast(arr: any[], lastOffset = 1) {
   return arr[arr.length - lastOffset];
 }
+
+/**
+ * 自动补零
+ *
+ * 索引从0开始
+ *
+ * 如果传入字符串自动补零
+ *
+ * @param num
+ */
+export function toBit(num: number | string, bX64: boolean = false) {
+  let bit = typeof num === "number" ? num.toString(2) : num;
+  const max = bX64 ? 64 : 32;
+  while (true) {
+    if (bit.length >= max) break;
+    bit = "0" + bit;
+  }
+  return bit;
+}
+
+/**
+ * 索引从0开始
+ */
+export function getBitIndex(bit: string | number | Buffer, index: number) {
+  if (bit instanceof Buffer) {
+    bit = buffer2dec(bit);
+  }
+  if (typeof bit === "number") {
+    bit = bit.toString(2);
+  }
+
+  // 溢出返回 0
+  return bit[bit.length - 1 - index] ?? 0;
+}
+
+/**
+ * 请自动补好零
+ *
+ * 获取0位-15位
+ * ```
+ * getBitRange(bit, 0, 15)
+ * ```
+ *
+ * @param bit
+ * @param start
+ * @param end
+ */
+export function getBitRange(bit: string, start: number, end: number) {
+  return bit.slice(bit.length - 1 - end, bit.length - start);
+}

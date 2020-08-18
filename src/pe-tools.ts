@@ -1,26 +1,37 @@
 import { PE_FILE } from "./node-pe-file";
 import { buffer2dec, memcpy, arrayLast } from "./tools";
 import { Section_Flags, Characteristics_Flags } from "./flags";
-import { IMAGE_SECTION_HEADER } from "./IMAGE_SECTION_HEADER";
+import { IMAGE_SECTION_HEADER } from "./images/IMAGE_SECTION_HEADER";
 import { IMAGE_SIZEOF_SHORT_NAME_t, DWORD_t, WORD_t } from "./types";
 
 /**
  * 将RAM的虚拟地址转化为文件偏移地址
  * 
- * * RVA（相对虚拟地址）
- * * VA（虚拟地址）
+ * * VA  (虚拟地址)     假如: 0x00401000
+ * * RVA (相对虚拟地址) 假如: 0x1000
  * 
  * ```
-  const pe_file = new PE_FILE(data);
-  const foa = RVA2FOA(pe_file, 0x00466d35);
+  const pe = new PE_FILE(data);
+  const foa = RVA2FOA(pe, 0x00466d35);
   console.log(foa.toString(16));
   
-  const foa2 = RVA2FOA(pe_file, 0x00400001);
+  const foa2 = RVA2FOA(pe, 0x00400001, true);
+  console.log(foa2.toString(16));
+
+  const foa3 = RVA2FOA(pe, 0x123602,);
   console.log(foa2.toString(16));
  * ```
  */
-export function RVA2FOA(pe: PE_FILE, rva: number, isVA: boolean = false) {
-  let r = isVA
+export function RVA2FOA(
+  pe: PE_FILE,
+  rva: number | Buffer,
+  isVA: boolean = false
+) {
+  if (rva instanceof Buffer) {
+    rva = buffer2dec(rva);
+  }
+
+  let r = !isVA
     ? rva
     : rva - buffer2dec(pe.image_nt_headers.image_optional_header.ImageBase);
 
@@ -328,10 +339,18 @@ export function align(size: number, alignSize: number): number {
 }
 
 /**
- * 通过SizeOfOptionalHeader检查PE文件是否为 x64
+ * 通过image_file_header.SizeOfOptionalHeader检查PE文件是否为 x64
  * @param pe
  */
-export function isX64PE(SizeOfOptionalHeader: number) {
+export function isX64PE(SizeOfOptionalHeader: number | Buffer | PE_FILE) {
+  if (SizeOfOptionalHeader instanceof PE_FILE)
+    SizeOfOptionalHeader =
+      SizeOfOptionalHeader.image_nt_headers.image_file_header
+        .SizeOfOptionalHeader;
+
+  if (SizeOfOptionalHeader instanceof Buffer)
+    SizeOfOptionalHeader = buffer2dec(SizeOfOptionalHeader);
+
   return SizeOfOptionalHeader === 0xf0;
 }
 
@@ -343,7 +362,7 @@ export function isX64PE(SizeOfOptionalHeader: number) {
 export function readASCII(data: Buffer, offset: number): Buffer {
   const nameBytes = [];
 
-  while (true) {
+  while (true && offset < data.byteLength) {
     const byte = data.readInt8(offset);
     if (byte === 0) break;
     nameBytes.push(byte);

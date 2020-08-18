@@ -1,5 +1,5 @@
-import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { IMAGE_SIZEOF_SHORT_NAME_t, DWORD_t, WORD_t } from "./types";
+import { PE_FILE_BASE } from "../PE_FILE_BASE";
+import { IMAGE_SIZEOF_SHORT_NAME_t, DWORD_t, WORD_t } from "../types";
 
 /**
 typedef struct _IMAGE_SECTION_HEADER {

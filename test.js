@@ -8,6 +8,5 @@
 
 let b = Buffer.alloc(4);
 
-b.writeUInt32LE(0xFFFFFFFF, 0);
+b.writeUInt32LE(0x0a, 0);
 
-console.log(b.buffer);

@@ -1,8 +1,8 @@
-import { PE_FILE } from "./node-pe-file";
-import { IMAGE_DIRECTORY_ENTRY_EXPORT_INDEX, DWORD_t, WORD_t } from "./types";
-import { RVA2FOA, readASCII } from "./pe-tools";
-import { buffer2dec, buffer2hex } from "./tools";
-import { PE_FILE_BASE } from "./PE_FILE_BASE";
+import { PE_FILE } from "../node-pe-file";
+import { IMAGE_DIRECTORY_ENTRY_EXPORT_INDEX, DWORD_t, WORD_t } from "../types";
+import { RVA2FOA, readASCII } from "../pe-tools";
+import { buffer2dec, buffer2hex } from "../tools";
+import { PE_FILE_BASE } from "../PE_FILE_BASE";
 
 /**
  * 
@@ -20,7 +20,7 @@ export function CREATE_IMAGE_EXPORT_DIRECTORY(pe: PE_FILE, data: Buffer) {
     ];
 
   // file offset addreass
-  const foa = RVA2FOA(pe, buffer2dec(exportData.VirtualAddress), true);
+  const foa = RVA2FOA(pe, exportData.VirtualAddress);
   return new IMAGE_EXPORT_DIRECTORY(data, foa);
 }
 
@@ -51,7 +51,7 @@ export class IMAGE_EXPORT_DIRECTORY extends PE_FILE_BASE {
   MinorVersion: Buffer;
 
   /**
-   * 包含DLL名称的ASCII字符串的地址。此地址是相对于图像库的。
+   * 包含DLL名称的ASCII字符串的地址。RVA
    */
   Name: Buffer;
 
@@ -71,17 +71,17 @@ export class IMAGE_EXPORT_DIRECTORY extends PE_FILE_BASE {
   NumberOfNames: Buffer;
 
   /**
-   * 导出地址表 VA
+   * 导出地址表 RVA
    */
   AddressOfFunctions: Buffer;
 
   /**
-   * 名称指针 VA
+   * 名称指针 RVA
    */
   AddressOfNames: Buffer;
 
   /**
-   * 序号表的地址 VA
+   * 序号表的地址 RVA
    */
   AddressOfNameOrdinals: Buffer;
 
@@ -180,7 +180,7 @@ export class IMAGE_EXPORT_DIRECTORY_PARSE {
     this.MajorVersion = ied.MajorVersion;
     this.MinorVersion = ied.MajorVersion;
 
-    this.Name = readASCII(data, RVA2FOA(pe, buffer2dec(ied.Name), true));
+    this.Name = readASCII(data, RVA2FOA(pe, ied.Name));
 
     this.Base = ied.Base;
     this.NumberOfFunctions = ied.NumberOfFunctions;
@@ -215,11 +215,7 @@ export class IMAGE_EXPORT_DIRECTORY_PARSE {
     data: Buffer
   ) {
     // 先获列表的地址
-    let AddressOfNamesOffset = RVA2FOA(
-      pe,
-      buffer2dec(ied.AddressOfNames),
-      true
-    );
+    let AddressOfNamesOffset = RVA2FOA(pe, ied.AddressOfNames);
 
     // 在获取列表中的每个名称的虚拟地址
     const VA_names = [];
@@ -230,7 +226,7 @@ export class IMAGE_EXPORT_DIRECTORY_PARSE {
 
     // 将虚拟地址转成文件地址，在获取函数名
     this.AddressOfNames = VA_names.map((va_nameOffset) => {
-      const nameOffset = RVA2FOA(pe, va_nameOffset, true);
+      const nameOffset = RVA2FOA(pe, va_nameOffset);
       return {
         va_offset: va_nameOffset,
         offset: nameOffset,
@@ -251,11 +247,7 @@ export class IMAGE_EXPORT_DIRECTORY_PARSE {
     data: Buffer
   ) {
     // 先获列表的地址
-    let AddressOfFunctionsOffset = RVA2FOA(
-      pe,
-      buffer2dec(ied.AddressOfFunctions),
-      true
-    );
+    let AddressOfFunctionsOffset = RVA2FOA(pe, ied.AddressOfFunctions);
 
     // 在获取列表中,每个函数的地址
     for (let i = 0; i < buffer2dec(this.NumberOfFunctions); i++) {
@@ -278,11 +270,7 @@ export class IMAGE_EXPORT_DIRECTORY_PARSE {
     data: Buffer
   ) {
     // 先获列表的地址
-    let AddressOfNameOrdinalsOffset = RVA2FOA(
-      pe,
-      buffer2dec(ied.AddressOfNameOrdinals),
-      true
-    );
+    let AddressOfNameOrdinalsOffset = RVA2FOA(pe, ied.AddressOfNameOrdinals);
 
     for (let i = 0; i < buffer2dec(this.NumberOfNames); i++) {
       const buf = Buffer.alloc(WORD_t);

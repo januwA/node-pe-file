@@ -33,6 +33,22 @@ fs.readFile("C:\\Windows\\System32\\opengl32.dll", (er, data) => {
 });
 ```
 
+## 导入表
+```
+fs.readFile("C:\\Windows\\System32\\opengl32.dll", (er, data) => {
+  const pe = new PE_FILE(data);
+  const imp = CREATE_IMAGE_DIRECTORY_ENTRY_IMPORT(pe, data);
+  imp.forEach((it) => {
+    const p = new IMAGE_DIRECTORY_ENTRY_IMPORT_PARSE(pe, it, data);
+    console.log(p.Name.toString());
+    p.FirstThunk.forEach((name) => {
+      console.log("  " + name?.name?.Name.toString());
+    });
+  });
+
+  done();
+});
+```
 
 - [高清PDF](http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf)
 - [microsoft 文档](https://docs.microsoft.com/en-us/windows/win32/debug/pe-format)

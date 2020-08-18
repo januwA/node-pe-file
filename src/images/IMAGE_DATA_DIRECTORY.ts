@@ -1,5 +1,5 @@
-import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { DWORD_t } from "./types";
+import { PE_FILE_BASE } from "../PE_FILE_BASE";
+import { DWORD_t } from "../types";
 
 /**
 struct _IMAGE_DATA_DIRECTORY {
@@ -11,7 +11,7 @@ export class IMAGE_DATA_DIRECTORY extends PE_FILE_BASE {
   static size = 0x8;
   
   /**
-   * ! VirtualAddress存的是VA地址,不是RVA地址
+   * ! VirtualAddress RVA
    */
   VirtualAddress: Buffer;
   Size: Buffer;

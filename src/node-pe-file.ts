@@ -1,9 +1,9 @@
 // https://docs.microsoft.com/en-us/windows/win32/debug/pe-format
 // http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf
 
-import { IMAGE_DOS_HEADER } from "./IMAGE_DOS_HEADER";
-import { IMAGE_NT_HEADERS } from "./IMAGE_NT_HEADERS";
-import { IMAGE_SECTION_HEADER } from "./IMAGE_SECTION_HEADER";
+import { IMAGE_DOS_HEADER } from "./images/IMAGE_DOS_HEADER";
+import { IMAGE_NT_HEADERS } from "./images/IMAGE_NT_HEADERS";
+import { IMAGE_SECTION_HEADER } from "./images/IMAGE_SECTION_HEADER";
 import { buffer2dec } from "./tools";
 
 /**

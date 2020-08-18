@@ -11,6 +11,9 @@ import {
   IMAGE_EXPORT_DIRECTORY_PARSE,
   IMAGE_DIRECTORY_ENTRY_BASERELOC_PARSE,
   CREATE_IMAGE_DIRECTORY_ENTRY_BASERELOC,
+  CREATE_IMAGE_DIRECTORY_ENTRY_IMPORT,
+  IMAGE_DIRECTORY_ENTRY_IMPORT,
+  IMAGE_DIRECTORY_ENTRY_IMPORT_PARSE,
 } from "../src";
 import { arrayLast } from "../src/tools";
 
@@ -28,16 +31,14 @@ describe("main", () => {
   it("test dll", (done) => {
     fs.readFile("C:\\Windows\\System32\\opengl32.dll", (er, data) => {
       const pe = new PE_FILE(data);
-      //const ed = CREATE_IMAGE_EXPORT_DIRECTORY(pe, data);
-      //const edp =  new IMAGE_EXPORT_DIRECTORY_PARSE(pe, ed, data);
-      //console.log(edp);
-
-      const deb = CREATE_IMAGE_DIRECTORY_ENTRY_BASERELOC(pe, data);
-      console.log(arrayLast(deb));
-
-      console.log(
-        new IMAGE_DIRECTORY_ENTRY_BASERELOC_PARSE(pe, arrayLast(deb), data)
-      );
+      const imp = CREATE_IMAGE_DIRECTORY_ENTRY_IMPORT(pe, data);
+      imp.forEach((it) => {
+        const p = new IMAGE_DIRECTORY_ENTRY_IMPORT_PARSE(pe, it, data);
+        console.log(p.Name.toString());
+        p.FirstThunk.forEach((name) => {
+          console.log("  " + name?.name?.Name.toString());
+        });
+      });
 
       done();
     });

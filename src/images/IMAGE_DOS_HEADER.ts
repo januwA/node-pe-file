@@ -1,5 +1,5 @@
-import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { WORD_t, DWORD_t } from "./types";
+import { PE_FILE_BASE } from "../PE_FILE_BASE";
+import { WORD_t, DWORD_t } from "../types";
 
 /**
 struct _IMAGE_DOS_HEADER {

@@ -1,7 +1,7 @@
-import { PE_FILE_BASE } from "./PE_FILE_BASE";
-import { WORD_t, DWORD_t, BYTE_t, QWORD_t } from "./types";
+import { PE_FILE_BASE } from "../PE_FILE_BASE";
+import { WORD_t, DWORD_t, BYTE_t, QWORD_t } from "../types";
 import { IMAGE_DATA_DIRECTORY } from "./IMAGE_DATA_DIRECTORY";
-import { isX64PE } from "./pe-tools";
+import { isX64PE } from "../pe-tools";
 
 /**
 struct _IMAGE_OPTIONAL_HEADER {
