@@ -1,4 +1,4 @@
-## nodejs 解析PE文件
+## nodejs 解析静态PE文件
 
 ```
 import * as fs from "fs";
@@ -51,6 +51,10 @@ fs.readFile("C:\\Windows\\System32\\opengl32.dll", (er, data) => {
 
 - [高清PDF](http://www.openrce.org/reference_library/files/reference/PE%20Format.pdf)
 - [microsoft 文档](https://docs.microsoft.com/en-us/windows/win32/debug/pe-format)
-
+- 需要注意在x86和x64中有些属性的大小是不同的,比如可选头中的由有几个值，还有解析导入表时
+- option_header.BaseOfData 在x86是DWORD，在x64被合并到了 option_header.ImageBase
+- option_header.ImageBase 在x86是DWORD，在x64中是QWORD, 可以看看: https://docs.microsoft.com/en-us/windows/win32/debug/pe-format#optional-header-standard-fields-image-only
+- 解析导入表时，在x86和x64需要注意的: https://docs.microsoft.com/en-us/windows/win32/debug/pe-format#import-lookup-table
 
 ![](./images/2020-08-18-21-06-38.png)
+

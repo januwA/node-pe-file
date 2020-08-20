@@ -23,6 +23,7 @@ const l = console.log;
 
 const gamePath = "C:\\Users\\ajanuw\\Desktop\\game2.exe";
 const opengl32_dllPath = "C:\\Windows\\System32\\opengl32.dll";
+const kernel32_dllPath = "C:\\Windows\\System32\\kernel32.dll";
 const notepadPath = "C:\\Windows\\System32\\notepad.exe";
 
 describe("main", () => {
@@ -45,27 +46,19 @@ describe("main", () => {
   //   });
 
   it("test notepad", (done) => {
-    fs.readFile(notepadPath, (er, data) => {
+    fs.readFile(kernel32_dllPath, (er, data) => {
       const pe = new PE_FILE(data);
 
       console.log(
-        buffer2hex(pe.image_nt_headers.image_optional_header.ImageBase)
+        RVA2FOA(
+          pe,
+          pe.image_nt_headers.image_optional_header.DataDirectory[0]
+            .VirtualAddress
+        ).toString(16)
       );
 
-      console.log(
-        buffer2hex(pe.image_nt_headers.image_optional_header.FileAlignment)
-      );
-      console.log(
-        buffer2hex(pe.image_nt_headers.image_optional_header.SectionAlignment)
-      );
-      console.log(
-        buffer2hex(pe.image_nt_headers.image_optional_header.SizeOfHeaders)
-      );
-
-      console.log(
-        buffer2hex(pe.image_nt_headers.image_optional_header.SizeOfImage)
-      );
-      
+      let r = CREATE_IMAGE_EXPORT_DIRECTORY(pe, data);
+      console.log(r);
 
       done();
     });
