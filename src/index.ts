@@ -30,6 +30,11 @@ export {
   IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT,
 } from "./images/IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT";
 
+export {
+  IMAGE_RESOURCE_DIRECTORY,
+  IMAGE_RESOURCE_DIRECTORY_ENTRY,
+} from "./images/IMAGE_RESOURCE_DIRECTORY";
+
 export { Section_Flags } from "./flags";
 
 export {
@@ -68,4 +73,5 @@ export {
   pushSection,
   align,
   isX64PE,
+  getExeIco,
 } from "./pe-tools";

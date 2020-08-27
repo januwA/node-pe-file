@@ -1,8 +1,17 @@
 import { PE_FILE } from "./node-pe-file";
-import { buffer2dec, memcpy, arrayLast } from "./tools";
+import { buffer2dec, memcpy, arrayLast, readByte } from "./tools";
 import { Section_Flags, Characteristics_Flags } from "./flags";
 import { IMAGE_SECTION_HEADER } from "./images/IMAGE_SECTION_HEADER";
-import { IMAGE_SIZEOF_SHORT_NAME_t, DWORD_t, WORD_t } from "./types";
+import {
+  IMAGE_SIZEOF_SHORT_NAME_t,
+  DWORD_t,
+  WORD_t,
+  IMAGE_DIRECTORY_ENTRY_RESOURCE_INDEX,
+} from "./types";
+import {
+  IMAGE_RESOURCE_DIRECTORY,
+  IMAGE_RESOURCE_DIRECTORY_ENTRY,
+} from "./images/IMAGE_RESOURCE_DIRECTORY";
 
 /**
  * 将RAM的虚拟地址转化为文件偏移地址
@@ -370,4 +379,34 @@ export function readASCII(data: Buffer, offset: number): Buffer {
   }
 
   return Buffer.from(nameBytes);
+}
+
+export function getExeIco(pe: PE_FILE, data: Buffer) {
+  const dos_header = pe.image_dos_header;
+  const nt_header = pe.image_nt_headers;
+  const file_header = nt_header.image_file_header;
+  const opt_header = nt_header.image_optional_header;
+
+  const resouceDir =
+    opt_header.DataDirectory[IMAGE_DIRECTORY_ENTRY_RESOURCE_INDEX];
+  const addrROA = RVA2FOA(pe, resouceDir.VirtualAddress);
+
+  const image_resource_directory = new IMAGE_RESOURCE_DIRECTORY(data, addrROA);
+
+  let sizeOfIcoGroup: number;
+  let pIcoData: number;
+  let pIcoGroupData: number;
+
+  const len =
+    image_resource_directory.NumberOfIdEntries +
+    image_resource_directory.NumberOfNamedEntries;
+
+  let offset = image_resource_directory.offset;
+  for (let i = 0; i < len; i++) {
+    const entry = new IMAGE_RESOURCE_DIRECTORY_ENTRY(data, offset);
+
+   
+
+    offset = entry.offset;
+  }
 }

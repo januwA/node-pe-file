@@ -16,6 +16,7 @@ import {
   IMAGE_DIRECTORY_ENTRY_IMPORT_PARSE,
   CREATE_IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT,
   IMAGE_DIRECTORY_ENTRY_BOUND_IMPORT,
+  getExeIco,
 } from "../src";
 import { arrayLast } from "../src/tools";
 
@@ -45,20 +46,28 @@ describe("main", () => {
   //     done();
   //   });
 
-  it("test notepad", (done) => {
-    fs.readFile(kernel32_dllPath, (er, data) => {
+  // it("test notepad", (done) => {
+  //   fs.readFile(kernel32_dllPath, (er, data) => {
+  //     const pe = new PE_FILE(data);
+
+  //     console.log(
+  //       RVA2FOA(
+  //         pe,
+  //         pe.image_nt_headers.image_optional_header.DataDirectory[0]
+  //           .VirtualAddress
+  //       ).toString(16)
+  //     );
+
+  //     let r = CREATE_IMAGE_EXPORT_DIRECTORY(pe, data);
+  //     console.log(r);
+
+  //     done();
+  //   });
+
+  it("test get ico", (done) => {
+    fs.readFile(gamePath, (er, data) => {
       const pe = new PE_FILE(data);
-
-      console.log(
-        RVA2FOA(
-          pe,
-          pe.image_nt_headers.image_optional_header.DataDirectory[0]
-            .VirtualAddress
-        ).toString(16)
-      );
-
-      let r = CREATE_IMAGE_EXPORT_DIRECTORY(pe, data);
-      console.log(r);
+      getExeIco(pe, data);
 
       done();
     });
